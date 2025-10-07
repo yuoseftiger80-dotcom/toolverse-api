@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TikTok Downloader</title>
+<style>
+  body{
+    margin:0;
+    font-family:sans-serif;
+    background:#070812;
+    color:white;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:40px;
+  }
+  h1{margin-bottom:20px;}
+  input{
+    padding:10px;
+    width:300px;
+    border-radius:8px;
+    border:none;
+    margin-bottom:12px;
+  }
+  button{
+    padding:10px 20px;
+    border:none;
+    border-radius:8px;
+    background:#06a0ff;
+    color:white;
+    cursor:pointer;
+  }
+  .result{
+    margin-top:20px;
+    font-size:14px;
+  }
+</style>
+</head>
+<body>
+<h1>TikTok Video Downloader</h1>
+<input type="text" id="videoURL" placeholder="Paste TikTok video URL">
+<button onclick="downloadVideo()">Download</button>
+<div class="result" id="result"></div>
+
+<script>
+const API_KEY = "999898a433mshf02526d0ff68a6cp11bca9jsn01f8e64b1372";
+
+async function downloadVideo(){
+  const url = document.getElementById('videoURL').value;
+  const resultDiv = document.getElementById('result');
+  if(!url){ resultDiv.textContent = "Please enter a video URL."; return; }
+
+  resultDiv.textContent = "Processing...";
+  try {
+    const res = await fetch(`https://tiktok-downloader-api.vercel.app/api/download?url=${encodeURIComponent(url)}&key=${API_KEY}`);
+    const data = await res.json();
+    if(data && data.download){
+      resultDiv.innerHTML = `<a href="${data.download}" target="_blank" style="color:#06a0ff;">Click here to download video</a>`;
+    } else {
+      resultDiv.textContent = "Failed to get video. Check the URL.";
+    }
+  } catch(e){
+    resultDiv.textContent = "Error connecting to API.";
+  }
+}
+</script>
+</body>
+</html>
